@@ -13,6 +13,14 @@
     "allOrders": {
       "path": "/_v/allOrders",
       "public": true
+    },
+    "createDevolutions": {
+      "path": "/_v/devolutions/createDevolution",
+      "public": true
+    },
+    "updateStatus": {
+      "path": "/_v/devolutions/updateDevolution/:orderId",
+      "public": true
     }
   }
 }

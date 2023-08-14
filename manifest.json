@@ -10,7 +10,8 @@
   "builders": {
     "node": "6.x",
     "graphql": "1.x",
-    "docs": "0.x"
+    "docs": "0.x",
+    "masterdata": "1.x"
   },
   "scripts": {
     "prereleasy": "bash lint.sh"
@@ -27,9 +28,26 @@
     {
       "name": "outbound-access",
       "attrs": {
+        "host": "www.datos.gov.co",
+        "path": "*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
         "host": "portal.vtexcommercestable.com.br",
         "path": "*"
       }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "api.vtex.com",
+        "path": "/api/*"
+      }
+    },
+    {
+      "name": "ADMIN_DS"
     },
     {
       "name": "colossus-fire-event"

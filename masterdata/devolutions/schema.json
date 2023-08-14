@@ -1,0 +1,46 @@
+{
+  "properties": {
+    "orderId": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 750
+    },
+    "paymentMethod": {
+      "type": "string",
+      "enum": ["dollars", "bond"]
+    },
+    "items": {
+      "type": "string",
+      "maxLength": 750
+    },
+    "status": {
+      "type": "string",
+      "enum": ["created", "in-revision", "rejected", "paid"]
+    }
+  },
+  "required": ["orderId"],
+  "v-indexed": [
+    "orderId",
+    "description",
+    "paymentMethod",
+    "items",
+    "status",
+    "id"
+  ],
+  "v-security": {
+    "allowGetAll": true,
+    "publicRead": [
+      "orderId",
+      "description",
+      "paymentMethod",
+      "items",
+      "status"
+    ],
+    "publicWrite": [],
+    "publicFilter": ["orderId"]
+  },
+  "additionalProperties": false
+}
