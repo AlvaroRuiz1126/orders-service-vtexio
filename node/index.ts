@@ -60,7 +60,7 @@ export default new Service({
       POST: [createDevolutions],
     }),
     updateStatus: method({
-      GET: [getDevolution],
+      PUT: [getDevolution],
     }),
   },
 })

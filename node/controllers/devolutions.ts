@@ -33,6 +33,7 @@ export async function createDevolutions(ctx: Context) {
 export async function getDevolution(ctx: Context) {
   const {
     clients: { devolutions },
+    req,
     vtex: {
       route: { params },
     },
@@ -40,17 +41,44 @@ export async function getDevolution(ctx: Context) {
   const { orderId } = params
 
   try {
-    const response = await devolutions.search(
+    const { status: statusToUpdate } = await json(req)
+    const [orderReturnInfo] = await devolutions.search(
       { page: 1, pageSize: 10 },
       ['_all'],
       '',
       `orderId=${orderId}`
     )
+    const { id, status } = orderReturnInfo
 
-    // const deleteReturn = await devolutions.delete('')
-    ctx.body = response
+    if (status === 'created' && statusToUpdate === 'in-revision') {
+      const updateOrderStatus = await devolutions.update(id, {
+        orderId,
+        status: statusToUpdate,
+      })
+      ctx.body = { orderReturnInfo, updateOrderStatus }
+
+      return
+    }
+
+    if (
+      status === 'in-revision' &&
+      (statusToUpdate === 'rejected' || statusToUpdate === 'paid')
+    ) {
+      const updateOrderStatus = await devolutions.update(id, {
+        orderId: '1353670506554-01',
+        status: statusToUpdate,
+      })
+      ctx.body = { orderReturnInfo, updateOrderStatus }
+
+      return
+    }
+
+    ctx.status = 400
+    ctx.body = {
+      message: 'Update failed',
+    }
   } catch (error) {
-    console.log(error)
+    console.log(error.response.data.errors[0].errors)
     throw new Error(error)
   }
 }
