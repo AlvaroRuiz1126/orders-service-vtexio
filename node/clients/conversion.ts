@@ -17,8 +17,8 @@ export default class Conversion extends ExternalClient {
 
       return actualTRM
     } catch (error) {
-      console.log(error)
-      throw new Error(error)
+      console.log(error.response)
+      throw new Error(error.response)
     }
   }
 }

@@ -1,20 +1,17 @@
 {
   "properties": {
     "orderId": {
-      "type": "string",
-      "maxLength": 50
+      "type": "string"
     },
     "description": {
-      "type": "string",
-      "maxLength": 750
+      "type": "string"
     },
     "paymentMethod": {
       "type": "string",
       "enum": ["dollars", "bond"]
     },
     "items": {
-      "type": "string",
-      "maxLength": 750
+      "type": "string"
     },
     "status": {
       "type": "string",

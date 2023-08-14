@@ -19,24 +19,28 @@ export default class Orders extends JanusClient {
     const dateLastMonth = new Date(`${year}-${lastMonth}-${day}`)
 
     try {
-      const { list } = await this.http.get(
-        `/api/oms/pvt/orders?f_invoicedDate=invoicedDate:[${dateLastMonth} TO ${today}]`
-      )
+      const { list } = await this.http.get(`/api/oms/pvt/orders`, {
+        params: {
+          f_creationDate: `creationDate:[${dateLastMonth.toISOString()} TO ${today.toISOString()}]`,
+          f_status: 'invoiced',
+        },
+      })
 
       return list
     } catch (e) {
-      console.log(e)
-      throw new Error(e)
+      console.log(e.response)
+      throw new Error(e.response)
     }
   }
 
   public async getOrderById(orderId: string) {
     try {
       const order = await this.http.get(`/api/oms/pvt/orders/${orderId}`)
-      console.log({ order })
+
+      return order
     } catch (error) {
-      console.log(error)
-      throw new Error(error)
+      console.log(error.response)
+      throw new Error(error.response)
     }
   }
 }

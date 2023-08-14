@@ -4,7 +4,7 @@ import { LRUCache, method, Service } from '@vtex/api'
 import { Clients } from './clients'
 import { status } from './middlewares/status'
 import { validate } from './middlewares/validate'
-import { allOrders, createDevolutions, getDevolution } from './controllers'
+import { allOrders, createDevolutions, updateStatus } from './controllers'
 
 const TIMEOUT_MS = 800
 
@@ -60,7 +60,7 @@ export default new Service({
       POST: [createDevolutions],
     }),
     updateStatus: method({
-      PUT: [getDevolution],
+      PUT: [updateStatus],
     }),
   },
 })

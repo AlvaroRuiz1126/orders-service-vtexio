@@ -50,6 +50,15 @@
       "name": "ADMIN_DS"
     },
     {
+      "name": "OMSViewer"
+    },
+    {
+      "name": "ListOrders"
+    },
+    {
+      "name": "POWER_USER_DS"
+    },
+    {
       "name": "colossus-fire-event"
     },
     {

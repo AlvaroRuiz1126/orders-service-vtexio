@@ -2,35 +2,37 @@ import { json } from 'co-body'
 
 export async function createDevolutions(ctx: Context) {
   const {
-    clients: {
-      // conversion,
-      // devolutions,
-      orders,
-    },
+    clients: { conversion, devolutions, orders },
     req,
   } = ctx
-  // let trm
+  let trm
 
   try {
     const returnBody = await json(req)
     const { orderId, paymentMethod } = returnBody
-    const orderItems = await orders.getOrderById(orderId)
-    console.log({ orderItems })
+    const order = await orders.getOrderById(orderId)
+    const { items } = order
+    returnBody.items = JSON.stringify(items)
+    const devolutionResponse = await devolutions.save(returnBody)
+
     if (paymentMethod === 'dollars') {
-      // trm = await conversion.getTRM()
+      trm = await conversion.getTRM()
+      ctx.body = {
+        devolutionResponse,
+        trm,
+      }
+
+      return
     }
 
-    // const devolutionResponse = await devolutions.save(returnBody)
-    // console.log({ devolutionResponse })
-
-    // ctx.body = { devolutionResponse, trm }
+    ctx.body = { devolutionResponse }
   } catch (error) {
-    console.log(error)
-    throw new Error(`Invalid json format: ${error}`)
+    console.log(error?.response)
+    throw new Error(`Invalid json format: ${error.response}`)
   }
 }
 
-export async function getDevolution(ctx: Context) {
+export async function updateStatus(ctx: Context) {
   const {
     clients: { devolutions },
     req,
@@ -65,7 +67,7 @@ export async function getDevolution(ctx: Context) {
       (statusToUpdate === 'rejected' || statusToUpdate === 'paid')
     ) {
       const updateOrderStatus = await devolutions.update(id, {
-        orderId: '1353670506554-01',
+        orderId,
         status: statusToUpdate,
       })
       ctx.body = { orderReturnInfo, updateOrderStatus }
@@ -75,10 +77,11 @@ export async function getDevolution(ctx: Context) {
 
     ctx.status = 400
     ctx.body = {
+      orderReturnInfo,
       message: 'Update failed',
     }
   } catch (error) {
     console.log(error.response.data.errors[0].errors)
-    throw new Error(error)
+    throw new Error(error.response.data.errors[0].errors)
   }
 }
