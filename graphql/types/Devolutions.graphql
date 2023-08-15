@@ -1,0 +1,24 @@
+input DevolutionInput {
+  orderId: String
+  description: String
+  paymentMethod: PaymentMethod
+  status: Status
+}
+
+enum PaymentMethod {
+  dollars
+  bond
+}
+
+enum Status {
+  created
+  in_revision
+  rejected
+  paid
+}
+
+type Document {
+  Id: String
+  Href: String
+  DocumentId: String
+}

@@ -1,0 +1,16 @@
+type Order {
+  orderId: String
+  creationDate: String
+  clientName: String
+  totalValue: Int
+  paymentNames: String
+  status: String
+  statusDescription: String
+  orderIsComplete: Boolean
+  currencyCode: String
+  totalItems: Int
+  hostname: String
+  orderFormId: String
+  paymentApprovedDate: String
+  readyForHandlingDate: String
+}

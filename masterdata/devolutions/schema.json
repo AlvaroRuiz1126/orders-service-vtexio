@@ -15,7 +15,7 @@
     },
     "status": {
       "type": "string",
-      "enum": ["created", "in-revision", "rejected", "paid"]
+      "enum": ["created", "in_revision", "rejected", "paid"]
     }
   },
   "required": ["orderId"],
