@@ -1,10 +1,16 @@
-import type { ClientsConfig, ServiceContext, RecorderState } from '@vtex/api'
+import type {
+  ClientsConfig,
+  ServiceContext,
+  RecorderState,
+  ParamsContext,
+} from '@vtex/api'
 import { LRUCache, method, Service } from '@vtex/api'
 
 import { Clients } from './clients'
 import { status } from './middlewares/status'
 import { validate } from './middlewares/validate'
 import { allOrders, createDevolutions, updateStatus } from './controllers'
+import { resolvers } from './resolvers'
 
 const TIMEOUT_MS = 800
 
@@ -46,8 +52,11 @@ declare global {
 }
 
 // Export a service that defines route handlers and client options.
-export default new Service({
+export default new Service<Clients, State, ParamsContext>({
   clients,
+  graphql: {
+    resolvers,
+  },
   routes: {
     // `status` is the route ID from service.json. It maps to an array of middlewares (or a single handler).
     status: method({

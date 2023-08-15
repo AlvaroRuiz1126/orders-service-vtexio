@@ -12,6 +12,7 @@
     "@vtex/api": "6.45.19",
     "@vtex/test-tools": "^1.0.0",
     "@vtex/tsconfig": "^0.5.6",
+    "itglobers.orders-service": "https://aruiz--itglobers.myvtex.com/_v/private/typings/linked/v1/itglobers.orders-service@0.0.1+build1692115585/public/@types/itglobers.orders-service",
     "typescript": "3.9.7"
   },
   "resolutions": {

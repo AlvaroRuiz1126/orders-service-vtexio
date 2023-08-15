@@ -40,7 +40,7 @@ export async function updateStatus(ctx: Context) {
       route: { params },
     },
   } = ctx
-  const { orderId } = params
+  const { orderId } = params as { orderId: string }
 
   try {
     const { status: statusToUpdate } = await json(req)
@@ -52,7 +52,7 @@ export async function updateStatus(ctx: Context) {
     )
     const { id, status } = orderReturnInfo
 
-    if (status === 'created' && statusToUpdate === 'in-revision') {
+    if (status === 'created' && statusToUpdate === 'in_revision') {
       const updateOrderStatus = await devolutions.update(id, {
         orderId,
         status: statusToUpdate,
@@ -63,7 +63,7 @@ export async function updateStatus(ctx: Context) {
     }
 
     if (
-      status === 'in-revision' &&
+      status === 'in_revision' &&
       (statusToUpdate === 'rejected' || statusToUpdate === 'paid')
     ) {
       const updateOrderStatus = await devolutions.update(id, {

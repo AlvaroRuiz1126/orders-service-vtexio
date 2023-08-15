@@ -1,5 +1,4 @@
 import { IOContext, InstanceOptions, JanusClient } from '@vtex/api'
-// import { devolutionsSchema } from '../schemas'
 
 export default class Orders extends JanusClient {
   constructor(context: IOContext, options?: InstanceOptions) {

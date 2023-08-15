@@ -1,6 +1,6 @@
 import { IOClients } from '@vtex/api'
 import { masterDataFor } from '@vtex/clients'
-// import { Devolutions } from 'itglobers.orders-service'
+import { Devolutions } from 'itglobers.orders-service'
 
 import Status from './status'
 import Orders from './orders'
@@ -21,6 +21,9 @@ export class Clients extends IOClients {
   }
 
   public get devolutions() {
-    return this.getOrSet('devolutions', masterDataFor('devolutions'))
+    return this.getOrSet(
+      'devolutions',
+      masterDataFor<Devolutions & { id: string }>('devolutions')
+    )
   }
 }
