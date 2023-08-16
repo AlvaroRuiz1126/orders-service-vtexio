@@ -1,17 +1,29 @@
+import { conversionService } from './conversion'
+import { getOrderById } from './orders'
+
 export const createDevolutionService = async (
   ctx: Context,
   { data }: { data: DevolutionData & { id: string; items: string } }
 ) => {
   const {
-    clients: { devolutions, orders },
+    clients: { devolutions },
   } = ctx
 
   try {
-    const { items } = await orders.getOrderById(data?.orderId)
+    const { items } = await getOrderById(ctx, data?.orderId)
     data.items = JSON.stringify(items)
     const devolutionsResponse = await devolutions.save(data)
 
-    return devolutionsResponse
+    if (data?.paymentMethod === 'dollars') {
+      const trm = await conversionService(ctx)
+
+      return {
+        devolutionsResponse,
+        trm,
+      }
+    }
+
+    return { devolutionsResponse }
   } catch (error) {
     console.log(error?.response?.data?.errors[0].errors)
     throw new Error(error?.response)

@@ -1,40 +1,26 @@
 import { json } from 'co-body'
+import { createDevolutionService, updateStatusService } from '../services'
 
 export async function createDevolutions(ctx: Context) {
-  const {
-    clients: { conversion, devolutions, orders },
-    req,
-  } = ctx
-  let trm
+  const { req } = ctx
 
   try {
-    const returnBody = await json(req)
-    const { orderId, paymentMethod } = returnBody
-    const order = await orders.getOrderById(orderId)
-    const { items } = order
-    returnBody.items = JSON.stringify(items)
-    const devolutionResponse = await devolutions.save(returnBody)
-
-    if (paymentMethod === 'dollars') {
-      trm = await conversion.getTRM()
-      ctx.body = {
-        devolutionResponse,
-        trm,
-      }
-
-      return
+    const returnBody = (await json(req)) as DevolutionData & {
+      id: string
+      items: string
     }
+    const data = { data: returnBody }
+    const devolutionCreated = await createDevolutionService(ctx, data)
 
-    ctx.body = { devolutionResponse }
+    ctx.body = { devolutionCreated }
   } catch (error) {
     console.log(error?.response)
     throw new Error(`Invalid json format: ${error.response}`)
   }
 }
 
-export async function updateStatus(ctx: Context) {
+export async function updateStatus(ctx: Context, next: () => Promise<any>) {
   const {
-    clients: { devolutions },
     req,
     vtex: {
       route: { params },
@@ -44,42 +30,21 @@ export async function updateStatus(ctx: Context) {
 
   try {
     const { status: statusToUpdate } = await json(req)
-    const [orderReturnInfo] = await devolutions.search(
-      { page: 1, pageSize: 10 },
-      ['_all'],
-      '',
-      `orderId=${orderId}`
+    const updateMessage = await updateStatusService(
+      ctx,
+      orderId,
+      statusToUpdate
     )
-    const { id, status } = orderReturnInfo
 
-    if (status === 'created' && statusToUpdate === 'in_revision') {
-      const updateOrderStatus = await devolutions.update(id, {
-        orderId,
-        status: statusToUpdate,
-      })
-      ctx.body = { orderReturnInfo, updateOrderStatus }
-
-      return
+    if (updateMessage === 'Failed') {
+      ctx.status = 400
+      ctx.body = updateMessage
     }
 
-    if (
-      status === 'in_revision' &&
-      (statusToUpdate === 'rejected' || statusToUpdate === 'paid')
-    ) {
-      const updateOrderStatus = await devolutions.update(id, {
-        orderId,
-        status: statusToUpdate,
-      })
-      ctx.body = { orderReturnInfo, updateOrderStatus }
+    ctx.status = 201
+    ctx.body = updateMessage
 
-      return
-    }
-
-    ctx.status = 400
-    ctx.body = {
-      orderReturnInfo,
-      message: 'Update failed',
-    }
+    await next()
   } catch (error) {
     console.log(error.response.data.errors[0].errors)
     throw new Error(error.response.data.errors[0].errors)

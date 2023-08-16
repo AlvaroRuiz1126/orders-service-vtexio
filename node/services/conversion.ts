@@ -3,5 +3,12 @@ export const conversionService = async (ctx: Context) => {
     clients: { conversion },
   } = ctx
 
-  console.log({ conversion })
+  try {
+    const trm = await conversion.getTRM()
+
+    return trm
+  } catch (error) {
+    console.log(error?.response)
+    throw new Error(error)
+  }
 }

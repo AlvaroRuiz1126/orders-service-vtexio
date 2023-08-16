@@ -17,8 +17,20 @@ enum Status {
   paid
 }
 
+type DevolutionCreated {
+  devolutionsResponse: Document
+  trm: TRM
+}
+
 type Document {
   Id: String
   Href: String
   DocumentId: String
+}
+
+type TRM {
+  valor: String
+  unidad: String
+  vigenciadesde: String
+  vigenciahasta: String
 }

@@ -35,6 +35,6 @@ type Mutation {
   delete(id: String): Boolean
   editBook(id: ID!, book: BookInput!): Book
   newBook(book: BookInput!): Book
-  createDevolution(data: DevolutionInput!): Document
+  createDevolution(data: DevolutionInput!): DevolutionCreated
   updateStatus(orderId: String!, status: Status): String
 }
